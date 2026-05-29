@@ -1,0 +1,21 @@
+node_modules
+.npm
+
+# Output
+/dist
+/build
+/.angular
+.output
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Devbox
+.devbox/

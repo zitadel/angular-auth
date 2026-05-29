@@ -1,0 +1,45 @@
+{
+  "name": "playground-angular-auth",
+  "license": "Apache-2.0",
+  "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "ng build",
+    "start": "ng serve --port ${PORT:-4200}",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@angular/common": "^19.0.0",
+    "@angular/compiler": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "@zitadel/angular-auth": "file:..",
+    "oidc-client-ts": "^3.4.0",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.6.0",
+    "zone.js": "^0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^19.0.0",
+    "@angular/cli": "^19.0.0",
+    "@angular/compiler-cli": "^19.0.0",
+    "@eslint/js": "^9.38.0",
+    "@ngx-env/builder": "^19.0.0",
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "typescript": "~5.6.0",
+    "typescript-eslint": "^8.20.0"
+  }
+}
