@@ -57,7 +57,7 @@ describe('authzTokenInterceptor', () => {
       user: () => ({ access_token: 'tok-123' }),
     } as unknown as Partial<AuthService>;
 
-    const result = run(auth, req, next);
+    const result = run(auth, req, next, ['https://example.com']);
 
     expect(req.clone).toHaveBeenCalledWith({
       setHeaders: { Authorization: 'Bearer tok-123' },
@@ -110,8 +110,8 @@ describe('authzTokenInterceptor', () => {
     expect(blockedNext).toHaveBeenCalledWith(blocked.req);
   });
 
-  it('should attach the token to all requests when no allowlist is configured', () => {
-    const { req, cloned } = makeRequest('https://anything.example.com/path');
+  it('should not attach the token when no allowlist is configured', () => {
+    const { req } = makeRequest('https://anything.example.com/path');
     const handled = of({} as HttpEvent<unknown>);
     const next = jest.fn(() => handled) as unknown as HttpHandlerFn;
     const auth = {
@@ -121,10 +121,8 @@ describe('authzTokenInterceptor', () => {
 
     const result = run(auth, req, next, []);
 
-    expect(req.clone).toHaveBeenCalledWith({
-      setHeaders: { Authorization: 'Bearer tok-123' },
-    });
-    expect(next).toHaveBeenCalledWith(cloned);
+    expect(req.clone).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(req);
     expect(result).toBe(handled);
   });
 });

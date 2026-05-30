@@ -29,7 +29,6 @@ let nextManager: UserManager;
 
 jest.unstable_mockModule('oidc-client-ts', () => ({
   UserManager: jest.fn(() => nextManager),
-  WebStorageStateStore: jest.fn(),
 }));
 
 const { AuthService } = await import('../src/lib/auth/auth.service.js');
@@ -76,6 +75,7 @@ const buildHarness = (
 describe('AuthService', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     jest.spyOn(console, 'error').mockImplementation(() => undefined);
   });
 
@@ -243,13 +243,13 @@ describe('AuthService', () => {
 
   it('should clean up the session after signoutCallback', async () => {
     const { service, manager } = buildHarness();
-    localStorage.setItem('authGuardInterceptedPathname', '/dash');
+    sessionStorage.setItem('zitadel:angular-auth:returnTo', '/dash');
 
     await service.signoutCallback('http://localhost/logout');
 
     expect(service.user()).toBeNull();
     expect(manager.removeUser).toHaveBeenCalled();
-    expect(localStorage.getItem('authGuardInterceptedPathname')).toBeNull();
+    expect(sessionStorage.getItem('zitadel:angular-auth:returnTo')).toBeNull();
   });
 
   it('should re-throw and still clean up when signoutCallback fails', async () => {
@@ -386,5 +386,19 @@ describe('AuthService', () => {
     expect(
       (service as unknown as { config: UserManagerSettings }).config.userStore,
     ).toBe(store);
+  });
+
+  it('should not override userStore when none is provided', () => {
+    const router = { navigate: jest.fn(async () => true) };
+    nextManager = createFakeUserManager();
+    const injector = Injector.create({ providers: [] });
+    const service = runInInjectionContext(
+      injector,
+      () => new AuthService({ ...baseConfig }, router as unknown as Router),
+    );
+
+    expect(
+      (service as unknown as { config: UserManagerSettings }).config.userStore,
+    ).toBeUndefined();
   });
 });

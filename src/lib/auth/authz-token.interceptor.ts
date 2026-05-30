@@ -8,10 +8,10 @@ import { ZITADEL_API_URLS } from '../oidc-config.token.js';
  * access token to outgoing requests as an `Authorization` header. When the user
  * is not authenticated, the request is forwarded unchanged.
  *
- * When an allowlist is configured via {@link ZITADEL_API_URLS}, the token is
- * only attached to requests whose URL starts with one of the configured
- * prefixes; an empty allowlist (the default) preserves the attach-when-
- * authenticated behavior.
+ * The token is only attached to requests whose URL starts with one of the
+ * prefixes configured via {@link ZITADEL_API_URLS}. The default allowlist is
+ * empty, so no token is attached until you opt specific API prefixes in. This
+ * prevents leaking the access token to third-party origins.
  *
  * @param req - The outgoing HTTP request.
  * @param next - The next handler in the interceptor chain.
@@ -29,8 +29,7 @@ export const authzTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const apiUrls = inject(ZITADEL_API_URLS, { optional: true }) ?? [];
 
-  const isAllowlisted =
-    apiUrls.length === 0 || apiUrls.some((url) => req.url.startsWith(url));
+  const isAllowlisted = apiUrls.some((url) => req.url.startsWith(url));
 
   if (authService.isAuthenticated() && isAllowlisted) {
     req = req.clone({
