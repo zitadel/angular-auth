@@ -68,36 +68,31 @@ export function applyOidcConfigDefaults(
 }
 
 /**
- * Determines whether the given query string contains the OAuth/OIDC redirect
- * callback parameters (`code` + `state`, or an `error`) that signal an
- * in-progress authorization response.
+ * Detects whether the current URL contains an OIDC authorization response,
+ * i.e. a `code`/`error` together with a `state` parameter, in either the
+ * query string (`response_mode: query`) or the fragment
+ * (`response_mode: fragment`).
  *
- * This is a pure helper with no Angular dependency, useful for deciding whether
- * the current location is an OIDC callback before invoking the callback flow.
- *
- * @param searchParams - A query string (e.g. `window.location.search`) or a
- *   pre-parsed {@link URLSearchParams}. Defaults to `''`.
- * @returns `true` when auth callback parameters are present, otherwise `false`.
+ * @param location - The location to inspect. Defaults to `window.location`.
+ * @returns `true` when the URL looks like an authorization response.
  *
  * @example
  * ```ts
  * import { hasAuthParams } from '@zitadel/angular-auth';
  *
- * if (hasAuthParams(window.location.search)) {
+ * if (hasAuthParams() && !auth.isAuthenticated()) {
  *   await auth.signinCallback();
  * }
  * ```
  */
-export function hasAuthParams(
-  searchParams: string | URLSearchParams = '',
-): boolean {
-  const params =
-    typeof searchParams === 'string'
-      ? new URLSearchParams(searchParams)
-      : searchParams;
+export const hasAuthParams = (location = window.location): boolean => {
+  const isAuthResponse = (params: URLSearchParams): boolean =>
+    Boolean((params.get('code') || params.get('error')) && params.get('state'));
 
-  const hasCodeAndState = params.has('code') && params.has('state');
-  const hasError = params.has('error');
+  // response_mode: query
+  const queryParams = new URLSearchParams(location.search);
+  // response_mode: fragment
+  const fragmentParams = new URLSearchParams(location.hash.replace('#', '?'));
 
-  return hasCodeAndState || hasError;
-}
+  return isAuthResponse(queryParams) || isAuthResponse(fragmentParams);
+};

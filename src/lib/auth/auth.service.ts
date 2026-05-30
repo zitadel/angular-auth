@@ -9,7 +9,6 @@ import {
   User,
   UserManager,
   UserManagerSettings,
-  WebStorageStateStore,
 } from 'oidc-client-ts';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -17,6 +16,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { OIDC_CONFIG_TOKEN } from '../oidc-config.token.js';
 import { applyOidcConfigDefaults, ZitadelScopeConfig } from '../utils.js';
 import { hasRole } from '../has-role.js';
+
+/**
+ * Session-storage key under which the post-login return path is stored before a
+ * signin redirect, and read back after the callback completes.
+ */
+const RETURN_TO_KEY = 'zitadel:angular-auth:returnTo';
 
 /**
  * Root-provided service that wraps the `oidc-client-ts` `UserManager` and
@@ -109,16 +114,7 @@ export class AuthService {
    * @private
    */
   private initializeUserManager(): void {
-    const withDefaults = applyOidcConfigDefaults(this.config);
-
-    this.config = withDefaults.userStore
-      ? withDefaults
-      : {
-          ...withDefaults,
-          userStore: new WebStorageStateStore({
-            store: window.localStorage,
-          }),
-        };
+    this.config = applyOidcConfigDefaults(this.config);
 
     this.userManager = new UserManager(this.config);
 
@@ -353,7 +349,7 @@ export class AuthService {
    */
   public setAuthGuardInterceptedPathname(path?: string): void {
     const pathToStore = path || window.location.pathname;
-    localStorage.setItem('authGuardInterceptedPathname', pathToStore);
+    sessionStorage.setItem(RETURN_TO_KEY, pathToStore);
   }
 
   /**
@@ -362,7 +358,7 @@ export class AuthService {
    * @returns The stored pathname, or `'/'` if none was stored.
    */
   public getAuthGuardInterceptedPathname(): string {
-    return localStorage.getItem('authGuardInterceptedPathname') || '/';
+    return sessionStorage.getItem(RETURN_TO_KEY) || '/';
   }
 
   /**
@@ -383,12 +379,12 @@ export class AuthService {
   }
 
   /**
-   * Cleans up user session and local storage after sign-out.
+   * Cleans up user session and session storage after sign-out.
    * @private
    */
   private cleanupAfterSignout(): void {
     this.user$.next(null);
     void this.userManager.removeUser();
-    localStorage.removeItem('authGuardInterceptedPathname');
+    sessionStorage.removeItem(RETURN_TO_KEY);
   }
 }
