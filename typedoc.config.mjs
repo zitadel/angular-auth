@@ -7,9 +7,16 @@ export default {
   readme: 'README.md',
   projectDocuments: [
     'docs/guide/getting-started/introduction.md',
+    'docs/guide/getting-started/installation.md',
     'docs/guide/angular/quick-start.md',
+    'docs/guide/angular/components.md',
+    'docs/guide/angular/api-calls.md',
+    'docs/guide/angular/interceptor.md',
     'docs/guide/application-side/configuration.md',
+    'docs/guide/application-side/protecting-pages.md',
+    'docs/guide/application-side/session-access.md',
     'docs/guide/advanced/silent-renew.md',
+    'docs/guide/advanced/hosting.md',
   ],
   excludeInternal: true,
   excludePrivate: true,
@@ -22,6 +29,7 @@ export default {
     'bash',
     'sh',
     'html',
+    'nginx',
   ],
   externalSymbolLinkMappings: {
     'oidc-client-ts': {
@@ -30,6 +38,8 @@ export default {
         'https://authts.github.io/oidc-client-ts/classes/UserManager.html',
       UserManagerSettings:
         'https://authts.github.io/oidc-client-ts/interfaces/UserManagerSettings.html',
+      ErrorResponse:
+        'https://authts.github.io/oidc-client-ts/classes/ErrorResponse.html',
     },
     typescript: {
       URLSearchParams:
