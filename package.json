@@ -1,7 +1,7 @@
 {
   "name": "@zitadel/angular-auth",
   "description": "A comprehensive authentication integration for Angular applications with TypeScript support, PKCE-based OIDC, and session management",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "main": "dist/public-api.js",
   "types": "dist/public-api.d.ts",
