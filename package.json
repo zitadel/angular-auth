@@ -51,11 +51,11 @@
     "rxjs": ">=7.0.0"
   },
   "devDependencies": {
-    "@angular/common": "^19.0.0",
-    "@angular/compiler": "^19.0.0",
-    "@angular/compiler-cli": "^19.0.0",
-    "@angular/core": "^19.0.0",
-    "@angular/router": "^19.0.0",
+    "@angular/common": "^22.0.2",
+    "@angular/compiler": "^22.0.2",
+    "@angular/compiler-cli": "^22.0.2",
+    "@angular/core": "^22.0.2",
+    "@angular/router": "^22.0.2",
     "@commitlint/config-conventional": "^20.5.0",
     "@jest/globals": "^30.0.5",
     "@mridang/eslint-defaults": "^1.6.3",
