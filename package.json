@@ -51,11 +51,11 @@
     "rxjs": ">=7.0.0"
   },
   "devDependencies": {
-    "@angular/common": "^19.0.0",
-    "@angular/compiler": "^19.0.0",
-    "@angular/compiler-cli": "^19.0.0",
-    "@angular/core": "^19.0.0",
-    "@angular/router": "^19.0.0",
+    "@angular/common": "^22.0.2",
+    "@angular/compiler": "^22.0.2",
+    "@angular/compiler-cli": "^22.0.2",
+    "@angular/core": "^22.0.2",
+    "@angular/router": "^22.0.2",
     "@commitlint/config-conventional": "^20.5.0",
     "@jest/globals": "^30.0.5",
     "@mridang/eslint-defaults": "^1.6.3",
@@ -67,6 +67,7 @@
     "@tsconfig/node22": "^22.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
+    "babel-jest": "^30.0.5",
     "eslint": "^9.39.1",
     "jest": "30.0.5",
     "jest-environment-jsdom": "30.0.5",
@@ -78,7 +79,7 @@
     "semantic-release": "^25.0.3",
     "ts-jest": "29.4.11",
     "typedoc": "^0.28.7",
-    "typescript": "~5.8.0",
+    "typescript": "~6.0.0",
     "zone.js": "^0.15.0"
   },
   "keywords": [
