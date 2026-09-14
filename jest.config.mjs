@@ -1,25 +1,6 @@
-import fs from 'node:fs';
-
 export default {
   preset: 'ts-jest/presets/default-esm',
   transform: {
-    // Run the Angular Linker (via babel-jest) over the partially-compiled
-    // `@angular/*` ESM bundles so their `ɵɵngDeclare*` partial declarations are
-    // linked for JIT use under Jest. Scoped to `@angular` to avoid touching app
-    // or other dependency code.
-    '[/\\\\]node_modules[/\\\\]@angular[/\\\\].+\\.m?js$': [
-      'babel-jest',
-      {
-        babelrc: false,
-        configFile: false,
-        plugins: [
-          [
-            '@angular/compiler-cli/linker/babel',
-            { linkerJitMode: true, fileSystem: fs },
-          ],
-        ],
-      },
-    ],
     '^.+\\.m?[tj]sx?$': [
       'ts-jest',
       {
@@ -29,7 +10,7 @@ export default {
     ],
   },
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
+  setupFiles: ['<rootDir>/test/setup.ts'],
   testMatch: ['**/*.+(spec|test).[tj]s?(x)'],
   moduleFileExtensions: [
     'ts',
@@ -49,12 +30,6 @@ export default {
     '/playground/',
   ],
   resetModules: false,
-  // Angular ships native ESM (`.mjs`) under `@angular/*`; allow ts-jest to
-  // transform those packages (and `tslib`) instead of skipping `node_modules`
-  // wholesale. rxjs is remapped to its CommonJS build via `moduleNameMapper`.
-  transformIgnorePatterns: [
-    '/node_modules/(?!(?:@angular|tslib|oidc-client-ts)/)',
-  ],
   collectCoverage: true,
   coverageDirectory: './build/coverage',
   collectCoverageFrom: ['src/**/*.{ts,tsx,js,jsx}', '!src/**/*.d.ts'],
@@ -74,6 +49,12 @@ export default {
       '<rootDir>/node_modules/oidc-client-ts/dist/esm/oidc-client-ts.js',
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+  // Angular ships native ESM (`.mjs`) under `@angular/*`; allow ts-jest to
+  // transform those packages (and `tslib`) instead of skipping `node_modules`
+  // wholesale. rxjs is remapped to its CommonJS build via `moduleNameMapper`.
+  transformIgnorePatterns: [
+    '/node_modules/(?!(?:@angular|tslib|oidc-client-ts)/)',
+  ],
   reporters: [
     'default',
     [
